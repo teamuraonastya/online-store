@@ -1,27 +1,26 @@
-import unittest
+import discord
+from discord.ext import commands
 
-def is_even(number):
-        if number % 2 == 0:
-            print(True)
-        else:
-            print(False)
-#Returns True if number is even or False if it is odd.
-        return number % 2
+intents = discord.Intents.default()
+intents.message_content = True
 
-class TestStringMethods(unittest.TestCase):
+bot = commands.Bot(command_prefix='/', intents=intents) 
 
-    def test_upper(self):
-        self.assertEqual("foo".upper(), "FOO")
+@bot.event
+async def on_ready():
+    print(f'We have logged in as {bot.user}')
 
-    def test_isupper(self):
-        self.assertTrue("FOO".isupper())
+@bot.command()
+async def hello(ctx):
+    await ctx.send(f'Привет! Я бот {bot.user}!')
 
-    def test_split(self):
-        test = "test split"
-        self.assertEqual(test.split(), ["test", "split"])
+@bot.command()
+async def heh(ctx, count_heh = 5):
+    await ctx.send("he" * count_heh)
 
-        with self.assertRaises(TypeError):
-            test.split(2)
+@bot.command()
+async def add(ctx, left: int, right: int):
+    """Adds two numbers together."""
+    await ctx.send(left + right)
 
-if __name__ == "__main__":
-    unittest.main()
+bot.run("token")
